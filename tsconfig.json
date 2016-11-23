@@ -1,0 +1,10 @@
+{
+   "files":[
+      "src/main.ts",
+      "src/shaders.ts"
+   ],
+   "compilerOptions":{
+      "noImplicitAny": true,
+      "target":"es5"
+   }
+}
