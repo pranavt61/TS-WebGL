@@ -14,11 +14,12 @@ var paths = {
 };
 
 var bundleFileName = "gl.js";
+var mainFileName = "src/Main.ts";
 
 var watchedBrowserify = watchify(browserify({
     basedir: '.',
     debug: true,
-    entries: ['src/main.ts'],
+    entries: [mainFileName],
     cache: {},
     packageCache: {}
 }).plugin(tsify));

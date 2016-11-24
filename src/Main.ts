@@ -1,7 +1,6 @@
 import {vertexShaderText} from "./shaders"
 import {fragmentShaderText} from "./shaders"
-
-import {GSquare} from "./GSquare";
+import {Tilemap} from "./Tilemap"
 
 var gl:any; // gl context
 var canvas:any; // DOM object
@@ -29,7 +28,9 @@ export var VertexData:number[] = [];
 export var IndexData:number[] = [];
 export var numRects:number = 0;
 
-var main = function()
+var tilemap:Tilemap;
+
+function main():void
 {
    screen.ratio = screen.x / screen.y;
    canvas = document.getElementById('glcanvas');
@@ -55,6 +56,7 @@ var main = function()
 
    initShaders();
    initProgram();
+   initGObjects();
 
    let VertBufferObject = gl.createBuffer();
    gl.bindBuffer(gl.ARRAY_BUFFER, VertBufferObject);
@@ -111,7 +113,7 @@ var main = function()
    }, 16);
 }
 
-var resizeCanvas = function()
+function resizeCanvas():void
 {
    canvas.width = document.body.clientHeight;
    canvas.height = document.body.clientHeight;
@@ -121,7 +123,7 @@ var resizeCanvas = function()
    tile.height = screen.y/tile.numY;
 }
 
-var initShaders = function()
+function initShaders():void
 {
    //Init Shaders
    vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -149,7 +151,7 @@ var initShaders = function()
    console.log('Compiled Shaders');
 };
 
-var initProgram = function()
+function initProgram():void
 {
    //attach shaders to program
    program = gl.createProgram();
@@ -174,4 +176,14 @@ var initProgram = function()
    }
    console.log('Validated Program');
 };
+
+function initGObjects():void
+{
+   tilemap = new Tilemap([
+      [0,1,0,1],
+      [1,0,1,0],
+      [0,1,0,1],
+      [1,0,1,0]
+   ]);
+}
 main();

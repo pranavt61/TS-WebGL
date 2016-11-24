@@ -1,7 +1,11 @@
 {
    "files":[
-      "src/main.ts",
-      "src/shaders.ts"
+      "src/Main.ts",
+      "src/Shaders.ts",
+      "src/Tilemap.ts",
+      "src/Tile.ts",
+      "src/Drawables/GSquare.ts",
+      "src/Drawables/GVec.ts"
    ],
    "compilerOptions":{
       "noImplicitAny": true,

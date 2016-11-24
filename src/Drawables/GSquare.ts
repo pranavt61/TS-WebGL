@@ -1,23 +1,18 @@
-import {screen} from "./main";
-import {numRects} from "./main";
-import {VertexData} from "./main";
-import {IndexData} from "./main";
+import {screen, numRects, VertexData, IndexData} from "../Main";
+import {GVec2} from "./GVec";
 
 export class GSquare{
 
    //contains all vertex data for this rect
    rectPoints:number[][];
-   screenPos:Object;
+   screenPos:GVec2;
    width:number;
    height:number;
 
    constructor(x: number, y:number, w:number, h:number, r:number, g:number, b:number)
    {
       this.rectPoints = [];
-      this.screenPos = {
-         x:x,
-         y:y
-      };
+      this.screenPos = new GVec2(x,y);
       this.width = w;
       this.height = h;
 
