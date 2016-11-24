@@ -53,8 +53,8 @@ var main = function()
 
    initShaders();
    initProgram();
-   
-   GRect(100,100,100,100,1,1,1);
+
+   let s:GSquare = new GSquare(100,100,100,100,1,1,0);
 
    let VertBufferObject = gl.createBuffer();
    gl.bindBuffer(gl.ARRAY_BUFFER, VertBufferObject);
@@ -175,55 +175,94 @@ var initProgram = function()
    console.log('Validated Program');
 };
 
-/*
-should input object
-/*
-{
-   x: number, (px)
-   y: number, (px)
-   w: number, (px)
-   h: number, (px)
-   r: number, (0 - 1)
-   g: number, (0 - 1)
-   b: nubmer  (0 - 1)
-}
-*/
-function GRect(x: number, y:number, w:number, h:number, r:number, g:number, b:number):void
-{
-   let rectPoints = [];
+// function GRect(x: number, y:number, w:number, h:number, r:number, g:number, b:number):void
+// {
+//    let rectPoints = [];
+//
+//    //init points
+//    rectPoints.push([(x/screen.x),(y)/screen.y]);
+//    rectPoints.push([(x + w)/screen.x,(y)/screen.y]);
+//    rectPoints.push([(x + w)/screen.x,(y - h)/screen.y]);
+//    rectPoints.push([(x)/screen.x,(y - h)/screen.y]);
+//
+//    for(let i = 0; i < rectPoints.length; i ++)
+//    {
+//       for(let j = 0; j < rectPoints[i].length; j ++)
+//       {
+//          rectPoints[i][j] += -1; // screen offset
+//       }
+//       rectPoints[i].push(r);
+//       rectPoints[i].push(g);
+//       rectPoints[i].push(b);
+//    }
+//
+//    //add to vertex buffer
+//    for(let i = 0; i < rectPoints.length; i ++)
+//       for(let j = 0; j < rectPoints[i].length; j ++)
+//          VertexData.push(rectPoints[i][j]);
+//
+//    //add to index buffer
+//    let i = 4 * numRects;
+//    IndexData.push(i);
+//    IndexData.push(i + 1);
+//    IndexData.push(i + 2);
+//    IndexData.push(i);
+//    IndexData.push(i + 2);
+//    IndexData.push(i + 3);
+//
+//    numRects++;
+// }
 
-   //init points
-   rectPoints.push([(x/screen.x),(y)/screen.y]);
-   rectPoints.push([(x + w)/screen.x,(y)/screen.y]);
-   rectPoints.push([(x + w)/screen.x,(y - h)/screen.y]);
-   rectPoints.push([(x)/screen.x,(y - h)/screen.y]);
+class GSquare{
 
-   for(let i = 0; i < rectPoints.length; i ++)
+   //contains all vertex data for this rect
+   rectPoints:number[][];
+   screenPos:Object;
+   width:number;
+   height:number;
+
+   constructor(x: number, y:number, w:number, h:number, r:number, g:number, b:number)
    {
-      for(let j = 0; j < rectPoints[i].length; j ++)
+      this.rectPoints = [];
+      this.screenPos = {
+         x:x,
+         y:y
+      };
+      this.width = w;
+      this.height = h;
+
+      //init points
+      this.rectPoints.push([(x/screen.x),(y)/screen.y]);
+      this.rectPoints.push([(x + w)/screen.x,(y)/screen.y]);
+      this.rectPoints.push([(x + w)/screen.x,(y - h)/screen.y]);
+      this.rectPoints.push([(x)/screen.x,(y - h)/screen.y]);
+
+      for(let i = 0; i < this.rectPoints.length; i ++)
       {
-         rectPoints[i][j] += -1; // screen offset
+         for(let j = 0; j < this.rectPoints[i].length; j ++)
+            this.rectPoints[i][j] += -1; // screen offset
+         //add color data
+         this.rectPoints[i].push(r);
+         this.rectPoints[i].push(g);
+         this.rectPoints[i].push(b);
       }
-      rectPoints[i].push(r);
-      rectPoints[i].push(g);
-      rectPoints[i].push(b);
+
+      //add to vertex buffer
+      for(let i = 0; i < this.rectPoints.length; i ++)
+      for(let j = 0; j < this.rectPoints[i].length; j ++)
+      VertexData.push(this.rectPoints[i][j]);
+
+      //add to index buffer
+      let i = 4 * numRects;
+      IndexData.push(i);
+      IndexData.push(i + 1);
+      IndexData.push(i + 2);
+      IndexData.push(i);
+      IndexData.push(i + 2);
+      IndexData.push(i + 3);
+
+      numRects++;
    }
-
-   //add to vertex buffer
-   for(let i = 0; i < rectPoints.length; i ++)
-      for(let j = 0; j < rectPoints[i].length; j ++)
-         VertexData.push(rectPoints[i][j]);
-
-   //add to index buffer
-   let i = 4 * numRects;
-   IndexData.push(i);
-   IndexData.push(i + 1);
-   IndexData.push(i + 2);
-   IndexData.push(i);
-   IndexData.push(i + 2);
-   IndexData.push(i + 3);
-
-   numRects++;
 }
 
 main();
