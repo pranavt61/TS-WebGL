@@ -1,14 +1,16 @@
 import {vertexShaderText} from "./shaders"
 import {fragmentShaderText} from "./shaders"
 
+import {GSquare} from "./GSquare";
+
 var gl:any; // gl context
 var canvas:any; // DOM object
-var screen = {
+export var screen = {
    x:300,
    y:200,
    ratio: 1/1
 }; // screen properties (TODO: create class)
-var tile = {
+export var tile = {
    numX: 20,
    numY: 20,
    width: 0,
@@ -23,9 +25,9 @@ var fragmentShader:any;
 var program:any;
 
 //Data sent to GPU
-var VertexData:number[] = [];
-var IndexData:number[] = [];
-var numRects:number = 0;
+export var VertexData:number[] = [];
+export var IndexData:number[] = [];
+export var numRects:number = 0;
 
 var main = function()
 {
@@ -53,8 +55,6 @@ var main = function()
 
    initShaders();
    initProgram();
-
-   let s:GSquare = new GSquare(100,100,100,100,1,1,0);
 
    let VertBufferObject = gl.createBuffer();
    gl.bindBuffer(gl.ARRAY_BUFFER, VertBufferObject);
@@ -174,95 +174,4 @@ var initProgram = function()
    }
    console.log('Validated Program');
 };
-
-// function GRect(x: number, y:number, w:number, h:number, r:number, g:number, b:number):void
-// {
-//    let rectPoints = [];
-//
-//    //init points
-//    rectPoints.push([(x/screen.x),(y)/screen.y]);
-//    rectPoints.push([(x + w)/screen.x,(y)/screen.y]);
-//    rectPoints.push([(x + w)/screen.x,(y - h)/screen.y]);
-//    rectPoints.push([(x)/screen.x,(y - h)/screen.y]);
-//
-//    for(let i = 0; i < rectPoints.length; i ++)
-//    {
-//       for(let j = 0; j < rectPoints[i].length; j ++)
-//       {
-//          rectPoints[i][j] += -1; // screen offset
-//       }
-//       rectPoints[i].push(r);
-//       rectPoints[i].push(g);
-//       rectPoints[i].push(b);
-//    }
-//
-//    //add to vertex buffer
-//    for(let i = 0; i < rectPoints.length; i ++)
-//       for(let j = 0; j < rectPoints[i].length; j ++)
-//          VertexData.push(rectPoints[i][j]);
-//
-//    //add to index buffer
-//    let i = 4 * numRects;
-//    IndexData.push(i);
-//    IndexData.push(i + 1);
-//    IndexData.push(i + 2);
-//    IndexData.push(i);
-//    IndexData.push(i + 2);
-//    IndexData.push(i + 3);
-//
-//    numRects++;
-// }
-
-class GSquare{
-
-   //contains all vertex data for this rect
-   rectPoints:number[][];
-   screenPos:Object;
-   width:number;
-   height:number;
-
-   constructor(x: number, y:number, w:number, h:number, r:number, g:number, b:number)
-   {
-      this.rectPoints = [];
-      this.screenPos = {
-         x:x,
-         y:y
-      };
-      this.width = w;
-      this.height = h;
-
-      //init points
-      this.rectPoints.push([(x/screen.x),(y)/screen.y]);
-      this.rectPoints.push([(x + w)/screen.x,(y)/screen.y]);
-      this.rectPoints.push([(x + w)/screen.x,(y - h)/screen.y]);
-      this.rectPoints.push([(x)/screen.x,(y - h)/screen.y]);
-
-      for(let i = 0; i < this.rectPoints.length; i ++)
-      {
-         for(let j = 0; j < this.rectPoints[i].length; j ++)
-            this.rectPoints[i][j] += -1; // screen offset
-         //add color data
-         this.rectPoints[i].push(r);
-         this.rectPoints[i].push(g);
-         this.rectPoints[i].push(b);
-      }
-
-      //add to vertex buffer
-      for(let i = 0; i < this.rectPoints.length; i ++)
-      for(let j = 0; j < this.rectPoints[i].length; j ++)
-      VertexData.push(this.rectPoints[i][j]);
-
-      //add to index buffer
-      let i = 4 * numRects;
-      IndexData.push(i);
-      IndexData.push(i + 1);
-      IndexData.push(i + 2);
-      IndexData.push(i);
-      IndexData.push(i + 2);
-      IndexData.push(i + 3);
-
-      numRects++;
-   }
-}
-
 main();
