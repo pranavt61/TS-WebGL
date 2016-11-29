@@ -24,9 +24,9 @@ export class GSquare{
 
       for(let i = 0; i < this.rectPoints.length; i ++)
       {
-         this.rectPoints[i][0] += -1;              // screen x offset
-         this.rectPoints[i][1] += -(h/screen.y);   // screen y offset
-         this.rectPoints[i][1] *= -1;              // invert y
+         this.rectPoints[i][0] += -1;                          // screen x offset
+         this.rectPoints[i][1] += -(1 - this.height/screen.y); // screen y offset(leave this offset, keeps tilemap in place)
+         this.rectPoints[i][1] *= -1;                          // invert y
 
          //add color data
          this.rectPoints[i].push(r);
