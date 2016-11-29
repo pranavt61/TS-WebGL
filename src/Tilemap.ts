@@ -8,7 +8,7 @@ export class Tilemap
    numTilesY:number = 10;
    tileHeight:number = 10;
    tileWidth:number = 10;
-   map:Tile[][];
+   tileMap:Tile[][];
 
    constructor(map:number[][])
    {
@@ -18,14 +18,15 @@ export class Tilemap
       this.tileWidth = screen.x/this.numTilesX * 2;
       this.tileHeight = screen.y/this.numTilesY * 2;
 
-      this.map = [];
+      this.tileMap = [];
       for(let x = 0; x < this.numTilesX; x++)
       {
-         this.map.push([]);
+         this.tileMap.push([]);
          for(let y = 0; y < this.numTilesY; y++)
          {
             let t:TileType;
-            switch(map[x][y])
+            // swap read of array, fixes issues
+            switch(map[y][x])
             {
                case 0:
                   t = TileType.Empty;
@@ -38,7 +39,7 @@ export class Tilemap
                   t = TileType.Empty;
                   break;
             }
-            this.map[x].push(new Tile(x*this.tileWidth,y*this.tileHeight,this.tileWidth,this.tileHeight,t));
+            this.tileMap[x].push(new Tile(x*this.tileWidth,y*this.tileHeight,this.tileWidth,this.tileHeight,t));
          }
       }
    }
