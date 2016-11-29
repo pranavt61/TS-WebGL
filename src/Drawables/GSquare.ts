@@ -24,8 +24,10 @@ export class GSquare{
 
       for(let i = 0; i < this.rectPoints.length; i ++)
       {
-         for(let j = 0; j < this.rectPoints[i].length; j ++)
-            this.rectPoints[i][j] += -1; // screen offset
+         this.rectPoints[i][0] += -1;              // screen x offset
+         this.rectPoints[i][1] += -(h/screen.y);   // screen y offset
+         this.rectPoints[i][1] *= -1;              // invert y
+
          //add color data
          this.rectPoints[i].push(r);
          this.rectPoints[i].push(g);
@@ -34,8 +36,8 @@ export class GSquare{
 
       //add to vertex buffer
       for(let i = 0; i < this.rectPoints.length; i ++)
-      for(let j = 0; j < this.rectPoints[i].length; j ++)
-      VertexData.push(this.rectPoints[i][j]);
+         for(let j = 0; j < this.rectPoints[i].length; j ++)
+            VertexData.push(this.rectPoints[i][j]);
 
       //add to index buffer
       let i = 4 * numRects;
