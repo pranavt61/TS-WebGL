@@ -1,28 +1,32 @@
 import {GSquare} from "./Drawables/GSquare";
-import {screen} from "./Main"
+import {screen, resizeCanvas} from "./Main"
 import {Tile,TileType} from "./Tile";
+
+export var tileProps = {
+   height: 1,
+   width: 1,
+   numX: 1,
+   numY: 1
+};
 
 export class Tilemap
 {
-   numTilesX:number = 10;
-   numTilesY:number = 10;
-   tileHeight:number = 10;
-   tileWidth:number = 10;
    tileMap:Tile[][];
 
    constructor(map:number[][])
    {
-      this.numTilesX = map.length;
-      this.numTilesY = map[0].length;
+      tileProps.numY = map.length;
+      tileProps.numX = map[0].length;
 
-      this.tileWidth = screen.x/this.numTilesX * 2;
-      this.tileHeight = screen.y/this.numTilesY * 2;
+      console.log(tileProps.numX, ' : ', tileProps.numY);
+
+      resizeCanvas();
 
       this.tileMap = [];
-      for(let x = 0; x < this.numTilesX; x++)
+      for(let x = 0; x < tileProps.numX; x++)
       {
          this.tileMap.push([]);
-         for(let y = 0; y < this.numTilesY; y++)
+         for(let y = 0; y < tileProps.numY; y++)
          {
             let t:TileType;
             // swap read of array, fixes issues
@@ -35,12 +39,36 @@ export class Tilemap
                   t = TileType.Solid;
                   break;
                default:
-               console.error("Error: Invalid map code");
+               console.error("Error: Invalid map code: ", map[y][x]);
                   t = TileType.Empty;
                   break;
             }
-            this.tileMap[x].push(new Tile(x*this.tileWidth,y*this.tileHeight,this.tileWidth,this.tileHeight,t));
+            this.tileMap[x].push
+            (
+               new Tile
+               (
+                  x* tileProps.width,
+                  y * tileProps.height,
+                  tileProps.width,
+                  tileProps.height,
+                  t
+               )
+            );
          }
       }
+
+      resizeCanvas();
+      console.log(tileProps.width + " : " + tileProps.height);
+   }
+
+   setTile(type:number):void
+   {
+      //TODO
+      this.tileMap
+   }
+
+   getTile(x:number, y:number):Tile
+   {
+      return this.tileMap[x][y];
    }
 }

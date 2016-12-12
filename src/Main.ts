@@ -1,20 +1,15 @@
-import {vertexShaderText} from "./shaders"
-import {fragmentShaderText} from "./shaders"
-import {Tilemap} from "./Tilemap"
+import {vertexShaderText, fragmentShaderText} from "./shaders"
+import {Tilemap, tileProps} from "./Tilemap"
+import {Vec2, Vec3} from "./Drawables/Vector";
+import {GSquare} from './Drawables/GSquare';
 
 var gl:any; // gl context
 var canvas:any; // DOM object
 export var screen = {
    x:300,
-   y:200,
+   y:240,
    ratio: 1/1
 }; // screen properties (TODO: create class)
-export var tile = {
-   numX: 20,
-   numY: 20,
-   width: 0,
-   height: 0
-};
 
 //Shaders
 var vertexShader:any;
@@ -27,6 +22,10 @@ var program:any;
 export var VertexData:number[] = [];
 export var IndexData:number[] = [];
 export var numRects:number = 0;
+
+//random number seeds
+var m_w = 213123123;    /* must not be zero */
+var m_z = 4355436546;  /* must not be zero */
 
 var tilemap:Tilemap;
 
@@ -58,6 +57,8 @@ function main():void
    initProgram();
    initGObjects();
 
+   let testRect = new GSquare(new Vec2(0,0), new Vec2(200,200), new Vec3(0,1,0));
+
    let VertBufferObject = gl.createBuffer();
    gl.bindBuffer(gl.ARRAY_BUFFER, VertBufferObject);
    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(VertexData), gl.DYNAMIC_DRAW);
@@ -82,8 +83,8 @@ function main():void
 
    //Set Properties to color
    gl.vertexAttribPointer(
-      colorAttribLocation,                //Attribute Location
-      3,                                  // num of elements per Attribute
+      colorAttribLocation,             //Attribute Location
+      3,                                  //num of elements per Attribute
       gl.FLOAT,                           //Type of elements
       gl.FALSE,
       5 * Float32Array.BYTES_PER_ELEMENT, //Size of vertexAttribPointer
@@ -99,7 +100,9 @@ function main():void
 
    setInterval(function()
    {
-      // Game loop
+
+      let p:Vec2 = testRect.getPosition();
+      testRect.setPosition(new Vec2(p.getX() + 1,p.getY() - 1));
 
       //clear screen
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -113,14 +116,19 @@ function main():void
    }, 16);
 }
 
-function resizeCanvas():void
+export function resizeCanvas()
 {
-   canvas.width = document.body.clientHeight;
-   canvas.height = document.body.clientHeight;
+   let ratio = tileProps.numX / tileProps.numY;
+
+   //set y comps
+   canvas.height = document.body.clientHeight - 10;
+   tileProps.height = canvas.height / tileProps.numY * 2;
+   tileProps.width = tileProps.height;
+   canvas.width = canvas.height;
+
    screen.x = canvas.width;
    screen.y = canvas.height;
-   tile.width = screen.x/tile.numX;
-   tile.height = screen.y/tile.numY;
+
 }
 
 function initShaders():void
@@ -179,21 +187,29 @@ function initProgram():void
 
 function initGObjects():void
 {
-   tilemap = new Tilemap([
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,1,1,1,1,1,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+   tilemap = new Tilemap
+   ([
+      [0,1,1,0,1,0,1,0,1,0,1,1],
+      [0,1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1,0],
+      [0,1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1,0],
+      [0,1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1,0],
+      [0,1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1,0],
+      [0,1,0,1,0,1,0,1,0,1,0,1],
+      [0,0,1,0,1,0,1,0,1,0,1,1],
+      [0,0,0,1,0,1,0,1,0,1,1,1],
    ]);
 }
+
+export function get_random():number
+{
+  m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+  m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+
+  return (m_z << 16) + m_w;
+};
+
 main();

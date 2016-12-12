@@ -1,4 +1,5 @@
 import {GSquare} from "./Drawables/GSquare";
+import {Vec2, Vec3} from "./Drawables/Vector"
 
 export class Tile
 {
@@ -28,7 +29,34 @@ export class Tile
             break;
       }
 
-      this.rect = new GSquare(x, y, w, h, r, g, b);
+      this.rect = new GSquare(new Vec2(x, y),new Vec2(w, h), new Vec3(r, g, b));
+   }
+
+   setType(type:number)
+   {
+      //TODO
+      switch(type)
+      {
+         case 0:
+            this.rect.
+            break;
+         case 1:
+            break;
+         default:
+            break;
+      }
+   }
+
+   //testing
+   setPosition(pos:Vec2):void
+   {
+      this.rect.setPosition(pos);
+   }
+
+   //testing
+   setColor(col:Vec3):void
+   {
+      this.rect.setColor(col);
    }
 }
 
