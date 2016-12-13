@@ -1,4 +1,4 @@
-import {vertexShaderText, fragmentShaderText} from "./shaders"
+import {vertexShaderText, fragmentShaderText} from "./Shaders"
 import {Tilemap, tileProps} from "./Tilemap"
 import {Vec2, Vec3} from "./Drawables/Vector";
 import {GSquare} from './Drawables/GSquare';
@@ -22,10 +22,11 @@ var program:any;
 export var VertexData:number[] = [];
 export var IndexData:number[] = [];
 export var numRects:number = 0;
+export var Camera:Vec2;
 
 //random number seeds
-var m_w = 213123123;    /* must not be zero */
-var m_z = 4355436546;  /* must not be zero */
+var m_w = 100;    /* must not be zero */
+var m_z = 200;  /* must not be zero */
 
 var tilemap:Tilemap;
 
@@ -55,9 +56,8 @@ function main():void
 
    initShaders();
    initProgram();
+   setCameraPosition(new Vec2(0,0));
    initGObjects();
-
-   let testRect = new GSquare(new Vec2(0,0), new Vec2(200,200), new Vec3(0,1,0));
 
    let VertBufferObject = gl.createBuffer();
    gl.bindBuffer(gl.ARRAY_BUFFER, VertBufferObject);
@@ -100,9 +100,7 @@ function main():void
 
    setInterval(function()
    {
-
-      let p:Vec2 = testRect.getPosition();
-      testRect.setPosition(new Vec2(p.getX() + 1,p.getY() - 1));
+      setCameraPosition(new Vec2(Camera.getX() + 1, Camera.getY() + 1));
 
       //clear screen
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -185,8 +183,19 @@ function initProgram():void
    console.log('Validated Program');
 };
 
+function setCameraPosition(pos:Vec2)
+{
+   Camera = pos;
+
+   if(tilemap != null)
+      for(let y = 0; y < tileProps.numY; y ++)
+         for(let x = 0; x < tileProps.numX; x ++)
+            tilemap.getTile(x,y).getRect().setPosition();
+}
+
 function initGObjects():void
 {
+
    tilemap = new Tilemap
    ([
       [0,1,1,0,1,0,1,0,1,0,1,1],

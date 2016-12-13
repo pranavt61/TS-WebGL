@@ -2,7 +2,7 @@ export class Vec2
 {
    private x:number;
    private y:number;
-   constructor(x:number, y:number)
+   constructor(x?:number, y?:number)
    {
       this.x = x;
       this.y = y;
@@ -14,10 +14,13 @@ export class Vec2
    setX(x:number){this.x = x;}
    setY(y:number){this.y = y;}
 
-   set(vec:Vec2)
+   set(vec ?: Vec2)
    {
-      this.x = vec.getX();
-      this.y = vec.getY();
+      if(vec != null)
+      {
+         this.x = vec.getX();
+         this.y = vec.getY();
+      }
    }
 
    //find distance between this point and parameter
@@ -34,7 +37,7 @@ export class Vec3
    private y:number;
    private z:number;
 
-   constructor(x:number, y:number, z:number)
+   constructor(x?:number, y?:number, z?:number)
    {
       this.x = x;
       this.y = y;
@@ -48,6 +51,15 @@ export class Vec3
    setX(x:number){this.x = x;}
    setY(y:number){this.y = y;}
    setZ(z:number){this.z = z;}
+
+   //color coords
+   getR():number{return this.x;}
+   getG():number{return this.y;}
+   getB():number{return this.z;}
+
+   setR(x:number){this.x = x;}
+   setG(y:number){this.y = y;}
+   setB(z:number){this.z = z;}
 
    set(vec:Vec3)
    {

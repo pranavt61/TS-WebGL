@@ -1,4 +1,4 @@
-import {screen, numRects, VertexData, IndexData} from "../Main";
+import {screen, numRects, VertexData, IndexData, Camera} from "../Main";
 import {Vec2, Vec3} from "./Vector";
 
 export class GSquare{
@@ -20,15 +20,12 @@ export class GSquare{
       this.id = numRects ++;
 
       //transformations
-      this.screenPos.setX(this.screenPos.getX() - screen.x);
-      this.screenPos.setY(this.screenPos.getY() - screen.y);
       this.screenPos.setY(this.screenPos.getY() * -1);
 
       //this.dimension.setX(this.dimension.getX() + -1);
       //this.dimension.setY(this.dimension.getY() + -(1 - this.dimension.getY()/screen.y));
       //this.dimension.setY(this.dimension.getY() * -1);
 
-      //TODO
 
       //init points
       this.rectPoints.push(
@@ -56,9 +53,9 @@ export class GSquare{
       for(let i = 0; i < this.rectPoints.length; i ++)
       {
          //add color data
-         this.rectPoints[i].push(this.color.getX());
-         this.rectPoints[i].push(this.color.getY());
-         this.rectPoints[i].push(this.color.getZ());
+         this.rectPoints[i].push((this.color.getX() % 256) / 255);
+         this.rectPoints[i].push((this.color.getY() % 256) / 255);
+         this.rectPoints[i].push((this.color.getZ() % 256) / 255);
       }
 
       //add to vertex buffer
@@ -85,14 +82,19 @@ export class GSquare{
 
       for(i = this.id * 20; i < (this.id + 1) * 20; i += 5)
       {
-         VertexData[i + 2] = color.getX();
-         VertexData[i + 3] = color.getY();
-         VertexData[i + 4] = color.getZ();
+         VertexData[i + 2] = (color.getX() % 256) / 255;
+         VertexData[i + 3] = (color.getY() % 256) / 255;
+         VertexData[i + 4] = (color.getZ() % 256) / 255;
       }
 
    }
 
-   setPosition(pos:Vec2):void
+   getColor():Vec3
+   {
+      return this.color;
+   }
+
+   setPosition(pos?:Vec2):void
    {
       //TODO
 
@@ -100,17 +102,17 @@ export class GSquare{
 
       //reset VertexData
       let i = this.id * 20;
-      VertexData[i]     = this.screenPos.getX() / screen.x;
-      VertexData[i + 1] = this.screenPos.getY() / screen.y;
+      VertexData[i + 0] = (this.screenPos.getX() - Camera.getX()) / screen.x;
+      VertexData[i + 1] = (this.screenPos.getY() + Camera.getY()) / screen.y;
 
-      VertexData[i + 5] = (this.screenPos.getX() + this.dimension.getX()) / screen.x;
-      VertexData[i + 6] = this.screenPos.getY() / screen.y;
+      VertexData[i + 5] = (this.screenPos.getX() + this.dimension.getX() - Camera.getX()) / screen.x;
+      VertexData[i + 6] = (this.screenPos.getY() + Camera.getY()) / screen.y;
 
-      VertexData[i + 10] = (this.screenPos.getX() + this.dimension.getX()) / screen.x;
-      VertexData[i + 11] = (this.screenPos.getY() - this.dimension.getY()) / screen.y;
+      VertexData[i + 10] = (this.screenPos.getX() + this.dimension.getX() - Camera.getX()) / screen.x;
+      VertexData[i + 11] = (this.screenPos.getY() - this.dimension.getY() + Camera.getY()) / screen.y;
 
-      VertexData[i + 15] = (this.screenPos.getX()) / screen.x;
-      VertexData[i + 16] = (this.screenPos.getY() - this.dimension.getY()) / screen.y;
+      VertexData[i + 15] = (this.screenPos.getX() - Camera.getX()) / screen.x;
+      VertexData[i + 16] = (this.screenPos.getY() - this.dimension.getY() + Camera.getY()) / screen.y;
    }
 
    getPosition():Vec2

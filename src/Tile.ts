@@ -9,55 +9,57 @@ export class Tile
    {
       this.type = type;
 
-      let r:number = 0;
-      let g:number = 0;
-      let b:number = 0;
+      let color:Vec3 = new Vec3();
 
       switch(type)
       {
          case TileType.Empty:
-            r = 1;
-            g = 1;
-            b = 1;
+            color.setR(255);
+            color.setG(255);
+            color.setB(255);
             break;
          case TileType.Solid:
-            r = 1;
+            color.setR(255);
             break;
          default:
             console.error("Error: invalid tile type");
-            g = 1;
+            color.setG(255);
             break;
       }
 
-      this.rect = new GSquare(new Vec2(x, y),new Vec2(w, h), new Vec3(r, g, b));
+      this.rect = new GSquare(new Vec2(x, y), new Vec2(w, h), color);
    }
 
    setType(type:number)
    {
-      //TODO
+      this.type = type;
+
+      let color:Vec3 = new Vec3();
+
       switch(type)
       {
-         case 0:
-            this.rect.
+         case TileType.Empty:
+            color.setR(255);
+            color.setG(255);
+            color.setB(255);
             break;
-         case 1:
+         case TileType.Solid:
+            color.setR(255);
             break;
          default:
+            console.error("Error: invalid tile type");
+            color.setG(255);
             break;
       }
+
+      this.rect.setColor(color);
    }
 
-   //testing
-   setPosition(pos:Vec2):void
+   getRect():GSquare
    {
-      this.rect.setPosition(pos);
+      return this.rect;
    }
 
-   //testing
-   setColor(col:Vec3):void
-   {
-      this.rect.setColor(col);
-   }
 }
 
 export enum TileType{
