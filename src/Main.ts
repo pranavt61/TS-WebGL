@@ -2,6 +2,7 @@ import {vertexShaderText, fragmentShaderText} from "./Shaders"
 import {Tilemap, tileProps} from "./Tilemap"
 import {Vec2, Vec3} from "./Drawables/Vector";
 import {GSquare} from './Drawables/GSquare';
+import {initKeyListeners, KeyPressed} from './Keyboard'
 
 var gl:any; // gl context
 var canvas:any; // DOM object
@@ -54,6 +55,7 @@ function main():void
    gl.clearColor(0.75, 0.85, 0.8, 1.0);
    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+   initKeyListeners();
    initShaders();
    initProgram();
    setCameraPosition(new Vec2(0,0));
@@ -100,7 +102,21 @@ function main():void
 
    setInterval(function()
    {
-      setCameraPosition(new Vec2(Camera.getX() + 1, Camera.getY() + 1));
+
+      let x = 0;
+      let y = 0;
+
+      if(KeyPressed.UP)
+         y = -2;
+      if(KeyPressed.DOWN)
+         y = 2;
+      if(KeyPressed.LEFT)
+         x = -2;
+      if(KeyPressed.RIGHT)
+         x = 2;
+
+      setCameraPosition(new Vec2(Camera.getX() + x, Camera.getY() + y));
+
 
       //clear screen
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -188,9 +204,9 @@ function setCameraPosition(pos:Vec2)
    Camera = pos;
 
    if(tilemap != null)
-      for(let y = 0; y < tileProps.numY; y ++)
-         for(let x = 0; x < tileProps.numX; x ++)
-            tilemap.getTile(x,y).getRect().setPosition();
+   for(let y = 0; y < tileProps.numY; y ++)
+   for(let x = 0; x < tileProps.numX; x ++)
+   tilemap.getTile(x,y).getRect().setPosition();
 }
 
 function initGObjects():void
@@ -215,10 +231,10 @@ function initGObjects():void
 
 export function get_random():number
 {
-  m_z = 36969 * (m_z & 65535) + (m_z >> 16);
-  m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+   m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+   m_w = 18000 * (m_w & 65535) + (m_w >> 16);
 
-  return (m_z << 16) + m_w;
+   return (m_z << 16) + m_w;
 };
 
 main();
